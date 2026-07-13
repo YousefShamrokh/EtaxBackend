@@ -12,7 +12,7 @@ class RoleMiddleware
     {
         $user = $request->user();
         
-        // Commented out because Sanctum already verifies authenticity of user.
+        // Commented out because Sanctum already verifies authenticity of user therefore this in unnecessary.
         // if (!$user) {
         //     return response()->json([
         //         'message' => 'Unauthenticated'
