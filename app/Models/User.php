@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['User_Name', 'User_Email', 'password'])]
+#[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password'])]
 class User extends Authenticatable
 {
@@ -26,6 +26,11 @@ class User extends Authenticatable
    // use HasFactory, Notifiable;
     public function borrowing(): HasMany{
         return $this->hasMany(UserBook::class, "user_id", "id");
+    }
+
+    public function addedBooks(): HasMany
+    {
+        return $this->hasMany(Book::class,"added_by", "id");
     }
     /**
      * Get the attributes that should be cast.
