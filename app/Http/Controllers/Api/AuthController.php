@@ -6,15 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\registerUserRequest;
+use App\Http\Requests\loginUserRequest;
 
 class AuthController extends Controller
 {
-    public function register(Request $request){
-        $validated = $request->validate([
-            'User_Name' => 'required | string | max: 50',
-            'User_Email' => 'required | string | email | max: 50 | unique:users',
-            'password' => 'required | string | min: 8'
-        ]);
+    public function register(registerUserRequest $request){
+        $validated = $request->validated();
 
         $validated['password'] = bcrypt($validated['password']); 
 
@@ -22,13 +20,10 @@ class AuthController extends Controller
         return response()->json($user, 201);
     }
 
-    public function login(Request $request){
-        $validated = $request->validate([
-            'User_Email' => 'required | string | email',
-            'password' => 'required | string'
-        ]);
+    public function login(loginUserRequest $request){
+        $validated = $request->validated();
 
-    $user = User::where('User_Email', $validated['User_Email'])->first();
+    $user = User::where('email', $validated['email'])->first();
 
     if(!$user || !Hash::check($validated['password'], $user->password)){
         return response()->json(['message' => 'Invalid credentials'], 401);
