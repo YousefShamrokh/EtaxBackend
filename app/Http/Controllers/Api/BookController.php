@@ -5,15 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Book;
+use Illuminate\Http\JsonResponse;
 
 class BookController extends Controller
 {
-    public function index(){
+    public function index() : JsonResponse{
         $books = Book::all();
         return response()->json($books);
     }
 
-    public function show(int $id){
+    public function show(int $id) : JsonResponse{
         $book = Book::find($id);
         if($book){
             return response()->json($book);
@@ -22,12 +23,12 @@ class BookController extends Controller
         }
     }
 
-    public function create(Request $request){
+    public function create(Request $request) : JsonResponse{
         $book = Book::create($request->all());
         return response()->json($book, 201);
     }
 
-    public function update(Request $request,int $id){
+    public function update(Request $request,int $id) : JsonResponse{
         $book = Book::find($id);
         if($book){
             $book->update($request->all());
@@ -37,7 +38,7 @@ class BookController extends Controller
         }
     }
 
-    public function destroy(int $id){
+    public function destroy(int $id) : JsonResponse{
         $book = Book::find($id);
         if($book){
             $book->delete();
@@ -47,7 +48,7 @@ class BookController extends Controller
         }
     }
 
-    public function hardDelete(int $id){
+    public function hardDelete(int $id) : JsonResponse{
         $book = Book::withTrashed()->find($id);
         if($book){
             $book->forceDelete();
@@ -57,7 +58,7 @@ class BookController extends Controller
         }
     }
 
-    public function restore(int $id){
+    public function restore(int $id) : JsonResponse{
         $book = Book::withTrashed()->find($id);
         if($book){
             $book->restore();
@@ -67,7 +68,7 @@ class BookController extends Controller
         }
     }
 
-    public function getSoftDeleted(){
+    public function getSoftDeleted() : JsonResponse{
         $book = Book::onlyTrashed()->get();
         return response()->json($book);
     }
