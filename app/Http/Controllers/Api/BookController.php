@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Book;
 use Illuminate\Http\JsonResponse;
+use App\Http\Requests\createBookRequest;
 
 class BookController extends Controller
 {
@@ -23,17 +24,17 @@ class BookController extends Controller
         }
     }
 
-    public function store(Request $request) : JsonResponse{
-        $data = $request->all();
+    public function store(createBookRequest $request) : JsonResponse{
+        $data = $request->validated();
         $data['added_by'] = auth()->id('user_id');
         $book = Book::create($data);
         return response()->json($book, 201);
     }
 
-    public function update(Request $request,int $id) : JsonResponse{
+    public function update(createBookRequest $request,int $id) : JsonResponse{ //createBookRequest reusable with put requests
         $book = Book::find($id);
         if($book){
-            $book->update($request->all());
+            $book->update($request->validated());
             return response()->json($book);
         }else{
             return response()->json(['message' => 'Book not found'], 404);
