@@ -12,25 +12,25 @@ Route::group(['prefix' => 'auth'], function(){
     Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 });
 
-Route::group(['prefix' => 'user'], function () {
-    Route::middleware(['auth:sanctum', 'role:admin'])->get('/', [UserController::class, 'getAll']);
-    Route::middleware(['auth:sanctum', 'role:admin'])->get('/{id}', [UserController::class, 'find']);
-    Route::middleware(['auth:sanctum', 'role:admin'])->post('/', [UserController::class, 'create']);
-    Route::middleware(['auth:sanctum', 'role:admin'])->put('/{id}', [UserController::class, 'update']);
-    Route::middleware(['auth:sanctum', 'role:admin'])->delete('/{id}', [UserController::class, 'delete']);
+Route::group(['middleware' => ['auth:sanctum', 'role:admin'], 'prefix' => 'user'], function () {
+    Route::get('/', [UserController::class, 'index']);
+    Route::get('/{id}', [UserController::class, 'show']);
+    Route::post('/', [UserController::class, 'store']);
+    Route::put('/{id}', [UserController::class, 'update']);
+    Route::delete('/{id}', [UserController::class, 'destroy']);
 });
 
-Route::group(['prefix' => 'book'], function(){
-    Route::middleware(['auth:sanctum', 'role:admin,user'])->get('/', [BookController::class, 'getAll']);
-    Route::middleware(['auth:sanctum', 'role:admin'])->get('/softDeleted', [BookController::class, 'getSoftDeleted']);
-    Route::middleware(['auth:sanctum', 'role:admin,user'])->get('/{id}', [BookController::class, 'find']);
-    Route::middleware(['auth:sanctum', 'role:admin'])->post('/', [BookController::class, 'create']);
-    Route::middleware(['auth:sanctum', 'role:admin'])->post('/restoreBook/{id}', [BookController::class, 'restore']);
+Route::group(['middleware' => ['auth:sanctum', 'role:admin'], 'prefix' => 'book'], function(){
+    Route::middleware(['role:user'])->get('/', [BookController::class, 'index']);
+    Route::get('/softDeleted', [BookController::class, 'getSoftDeleted']);
+    Route::middleware(['role:user'])->get('/{id}', [BookController::class, 'show']);
+    Route::post('/', [BookController::class, 'store']);
+    Route::post('/restoreBook/{id}', [BookController::class, 'restore']);
     Route::middleware(['auth:sanctum', 'role:admin'])->put('/{id}', [BookController::class, 'update']);
-    Route::middleware(['auth:sanctum', 'role:admin'])->delete('/{id}', [BookController::class, 'delete']);
+    Route::middleware(['auth:sanctum', 'role:admin'])->delete('/{id}', [BookController::class, 'destroy']);
     Route::middleware(['auth:sanctum', 'role:admin'])->delete('/hardDelete/{id}', [BookController::class, 'hardDelete']);
 });
 
-Route::group(['prefix' => 'user-book'], function(){
-    Route::middleware(['auth:sanctum', 'role:admin,user'])->get('/', [UserBookController::class, 'getAll']);
+Route::group(['middleware' => ['auth:sanctum', 'role:admin'], 'prefix' => 'user-book'], function(){
+    Route::get('/', [UserBookController::class, 'index']);
 });
