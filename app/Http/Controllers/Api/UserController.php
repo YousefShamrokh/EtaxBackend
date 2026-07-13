@@ -5,16 +5,17 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
 
-    public function getAll(){
+    public function index() : JsonResponse{
         $users = User::all();
         return response()->json($users);
     }
 
-    public function find(int $id){
+    public function show(int $id) : JsonResponse{
         $user = User::find($id);
         if($user){
             return response()->json($user);
@@ -23,12 +24,12 @@ class UserController extends Controller
         }
     }
 
-    public function create(Request $request){
+    public function create(Request $request) : JsonResponse{
         $user = User::create($request->all());
         return response()->json($user, 201);
     }
 
-    public function update(Request $request,int $id){
+    public function update(Request $request,int $id) : JsonResponse{
         $user = User::find($id);
         if($user){
             $user->update($request->all());
@@ -38,7 +39,7 @@ class UserController extends Controller
         }
     }
 
-    public function delete(int $id){
+    public function destroy(int $id) : JsonResponse {
         $user = User::find($id);
         if($user){
             $user->delete();
