@@ -24,7 +24,9 @@ class BookController extends Controller
     }
 
     public function create(Request $request) : JsonResponse{
-        $book = Book::create($request->all());
+        $data = $request->all();
+        $data['added_by'] = auth()->id('user_id');
+        $book = Book::create($data);
         return response()->json($book, 201);
     }
 

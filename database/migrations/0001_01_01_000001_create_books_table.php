@@ -14,10 +14,11 @@ return new class extends Migration
        Schema::create('books', function (Blueprint $table) {
         $table->softDeletes();
         $table->id();
-        $table->string('Book_Name');
-        $table->string('Publisher_Name');
-        $table->date('Publish_Date');
+        $table->string('name');
+        $table->string('publisher_name');
+        $table->date('publish_date');
         $table->timestamps();
+        $table->foreignId('added_by')->constrained('users','id');
        });
     }
 
