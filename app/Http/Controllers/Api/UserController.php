@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use App\Http\Requests\createUserRequest;
 
 class UserController extends Controller
 {
@@ -24,15 +25,15 @@ class UserController extends Controller
         }
     }
 
-    public function store(Request $request) : JsonResponse{
-        $user = User::create($request->all());
+    public function store(createUserRequest $request) : JsonResponse{
+        $user = User::create($request->validated());
         return response()->json($user, 201);
     }
 
-    public function update(Request $request,int $id) : JsonResponse{
+    public function update(createUserRequest $request,int $id) : JsonResponse{ //createUserRequest reusable with put requests
         $user = User::find($id);
         if($user){
-            $user->update($request->all());
+            $user->update($request->validated());
             return response()->json($user);
         }else{
             return response()->json(['message' => 'User not found'], 404);
