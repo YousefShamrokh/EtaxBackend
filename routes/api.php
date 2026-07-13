@@ -26,9 +26,9 @@ Route::group(['middleware' => ['auth:sanctum', 'role:admin'], 'prefix' => 'book'
     Route::middleware(['role:user'])->get('/{id}', [BookController::class, 'show']);
     Route::post('/', [BookController::class, 'store']);
     Route::post('/restoreBook/{id}', [BookController::class, 'restore']);
-    Route::middleware(['auth:sanctum', 'role:admin'])->put('/{id}', [BookController::class, 'update']);
-    Route::middleware(['auth:sanctum', 'role:admin'])->delete('/{id}', [BookController::class, 'destroy']);
-    Route::middleware(['auth:sanctum', 'role:admin'])->delete('/hardDelete/{id}', [BookController::class, 'hardDelete']);
+    Route::put('/{id}', [BookController::class, 'update']);
+    Route::delete('/{id}', [BookController::class, 'destroy']);
+    Route::delete('/hardDelete/{id}', [BookController::class, 'hardDelete']);
 });
 
 Route::group(['middleware' => ['auth:sanctum', 'role:admin'], 'prefix' => 'user-book'], function(){
