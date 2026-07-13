@@ -50,7 +50,8 @@ return [
     |
     */
 
-    'expiration' => null,
+    // 'expiration' => null,
+    'expiration' => env('EXPIRATION', 60),
 
     /*
     |--------------------------------------------------------------------------
