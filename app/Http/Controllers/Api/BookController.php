@@ -8,12 +8,12 @@ use App\Models\Book;
 
 class BookController extends Controller
 {
-    public function getAll(){
+    public function index(){
         $books = Book::all();
         return response()->json($books);
     }
 
-    public function find(int $id){
+    public function show(int $id){
         $book = Book::find($id);
         if($book){
             return response()->json($book);
@@ -37,7 +37,7 @@ class BookController extends Controller
         }
     }
 
-    public function delete(int $id){
+    public function destroy(int $id){
         $book = Book::find($id);
         if($book){
             $book->delete();
