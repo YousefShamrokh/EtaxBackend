@@ -7,18 +7,19 @@ use Illuminate\Http\Request;
 use App\Models\Book;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\createBookRequest;
+use App\Http\Resources\BookResource;
 
 class BookController extends Controller
 {
     public function index() : JsonResponse{
         $books = Book::all();
-        return response()->json($books);
+        return response()->json(BookResource::collection($books));
     }
 
     public function show(int $id) : JsonResponse{
         $book = Book::find($id);
         if($book){
-            return response()->json($book);
+            return response()->json(new BookResource($book));
         }else{
             return response()->json(['message' => 'Book not found'], 404);
         }
@@ -28,14 +29,14 @@ class BookController extends Controller
         $data = $request->validated();
         $data['added_by'] = auth()->id();
         $book = Book::create($data);
-        return response()->json($book, 201);
+        return response()->json(new BookResource($book), 201);
     }
 
     public function update(createBookRequest $request,int $id) : JsonResponse{ //createBookRequest reusable with put requests
         $book = Book::find($id);
         if($book){
             $book->update($request->validated());
-            return response()->json($book);
+            return response()->json(new BookResource($book));
         }else{
             return response()->json(['message' => 'Book not found'], 404);
         }
@@ -73,6 +74,6 @@ class BookController extends Controller
 
     public function getSoftDeleted() : JsonResponse{
         $book = Book::onlyTrashed()->get();
-        return response()->json($book);
+        return response()->json(new BookResource($book));
     }
 }
