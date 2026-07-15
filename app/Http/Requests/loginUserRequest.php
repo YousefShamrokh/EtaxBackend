@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Override;
 
 class loginUserRequest extends FormRequest
 {
@@ -25,6 +26,17 @@ class loginUserRequest extends FormRequest
         return [
             'email' => 'required | string | email',
             'password' => 'required | string'
+        ];
+    }
+
+    #[Override]
+    public function messages()
+    {
+        return [
+            'email.required' => 'Please Enter your Email',
+            'email.email' => 'Input must be an email',
+            
+            'password.required' => 'Please enter a password'
         ];
     }
 }
