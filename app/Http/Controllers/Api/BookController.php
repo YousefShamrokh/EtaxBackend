@@ -3,26 +3,24 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Book;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\createBookRequest;
 use App\Http\Resources\BookResource;
+use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
-    public function index() : JsonResponse{
-        $books = Book::all();
+    public function index(Request $request) : JsonResponse{
+        $perPage = (int) $request->query('per_page', 15);
+        $perPage = min(max($perPage, 1), 100);
+        $books = Book::paginate($perPage)->withQueryString(); //allows user control of number of items per page
         return response()->json(BookResource::collection($books));
     }
 
     public function show(int $id) : JsonResponse{
-        $book = Book::find($id);
-        if($book){
-            return response()->json(new BookResource($book));
-        }else{
-            return response()->json(['message' => 'Book not found'], 404);
-        }
+        $book = Book::findOrFail($id);
+        return response()->json(new BookResource($book));
     }
 
     public function store(createBookRequest $request) : JsonResponse{
@@ -33,43 +31,27 @@ class BookController extends Controller
     }
 
     public function update(createBookRequest $request,int $id) : JsonResponse{ //createBookRequest reusable with put requests
-        $book = Book::find($id);
-        if($book){
-            $book->update($request->validated());
-            return response()->json(new BookResource($book));
-        }else{
-            return response()->json(['message' => 'Book not found'], 404);
-        }
+        $book = Book::findOrFail($id);
+        $book->update($request->validated());
+        return response()->json(new BookResource($book));
     }
 
     public function destroy(int $id) : JsonResponse{
-        $book = Book::find($id);
-        if($book){
-            $book->delete();
-            return response()->json(['message' => 'Book deleted']);
-        }else{
-            return response()->json(['message' => 'Book not found'], 404);
-        }
+        $book = Book::findOrFail($id);
+        $book->delete();
+        return response()->json(['message' => 'Book deleted']);
     }
 
     public function hardDelete(int $id) : JsonResponse{
-        $book = Book::withTrashed()->find($id);
-        if($book){
-            $book->forceDelete();
-            return response()->json(['message' => 'Book permanently deleted']);
-        }else{
-            return response()->json(['message' => 'Book not found'], 404);
-        }
+        $book = Book::withTrashed()->findOrFail($id);
+        $book->forceDelete();
+        return response()->json(['message' => 'Book permanently deleted']);
     }
 
     public function restore(int $id) : JsonResponse{
-        $book = Book::withTrashed()->find($id);
-        if($book){
-            $book->restore();
-            return response()->json(['message' => 'Book restored']);
-        }else{
-            return response()->json(['message' => 'Book not found'], 404);
-        }
+        $book = Book::withTrashed()->findOrFail($id);
+        $book->restore();
+        return response()->json(['message' => 'Book restored']);
     }
 
     public function getSoftDeleted() : JsonResponse{
