@@ -26,6 +26,7 @@ Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'book'], function(){
     Route::group(['middleware' => ['role:admin']],function(){
         Route::get('/softDeleted', [BookController::class, 'getSoftDeleted']);
         Route::post('/', [BookController::class, 'store']);
+        Route::post('/{id}/attachment', [BookController::class, 'uploadAttachment']);
         Route::post('/restoreBook/{id}', [BookController::class, 'restore']);
         Route::put('/{id}', [BookController::class, 'update']);
         Route::delete('/{id}', [BookController::class, 'destroy']);

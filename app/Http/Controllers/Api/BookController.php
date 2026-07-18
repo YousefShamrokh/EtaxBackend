@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Book;
+use App\Models\Attachment;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\createBookRequest;
 use App\Http\Resources\BookResource;
+use App\Http\Requests\UploadAttachmentRequest;
+use App\Http\Resources\AttachmentResource;
 use Illuminate\Http\Request;
+use App\Services\AttachmentService;
 
 class BookController extends Controller
 {
@@ -57,5 +61,16 @@ class BookController extends Controller
     public function getSoftDeleted() : JsonResponse{
         $book = Book::onlyTrashed()->get();
         return response()->json(new BookResource($book));
+    }
+
+    public function uploadAttachment(UploadAttachmentRequest $request, AttachmentService $attachmentService, int $id) : JsonResponse{
+        $book = Book::findOrFail($id);
+
+        $file = $request->file('image');
+        $path = $file->store('books', 'public');
+
+        $attachment = $attachmentService->create($book->id, $file, $path);
+        
+        return response()->json(new AttachmentResource($attachment));
     }
 }
