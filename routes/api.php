@@ -10,6 +10,8 @@ Route::group(['prefix' => 'auth'], function(){
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+    Route::middleware(['signed'])->name('verification.verify')->get('/email/verify/{id}/{hash}', [AuthController::class,'verifyEmail']);
+    Route::post('/email/verification-notification', [AuthController::class, 'resendMail']);
 });
 
 Route::group(['middleware' => ['auth:sanctum', 'role:admin'], 'prefix' => 'user'], function () {
