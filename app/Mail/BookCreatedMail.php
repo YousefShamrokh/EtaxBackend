@@ -39,10 +39,13 @@ class BookCreatedMail extends Mailable
     /**
      * Get the message content definition.
      */
+    /**
+     * Get the message content definition.
+     */
     public function content(): Content
     {
         return new Content(
-            htmlString: 'This is the raw text content of my email!',
+            view: 'emails.books.created'
         );
     }
 
