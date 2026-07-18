@@ -15,9 +15,7 @@ class UserBookResource extends JsonResource
             'id' => $this->id,
             'return_date' => $this->return_date,
             'borrow_date' => $this->created_at,
-            
             'user' => new UserResource($this->whenLoaded('user')), //exposes name and id of user who borrowed book
-            
             'book' => new BookResource($this->whenLoaded('book')), //exposes name and of book borrowed by user
         ];
     }
