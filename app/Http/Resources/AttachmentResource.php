@@ -19,7 +19,7 @@ class AttachmentResource extends JsonResource
             'id' => $this->id,
             'book_id' => $this->book_id,
             'original_file_name' => $this->original_file_name,
-            'url' => Storage::url($this->file_path),
+            'url' => asset(Storage::url($this->file_path)),
         ];
     }
 }

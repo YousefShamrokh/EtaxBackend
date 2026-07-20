@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\BookController;
 use App\Http\Controllers\Api\UserBookController;
 use App\Http\Controllers\Api\AuthController;
+use App\Models\Book;
 
 Route::group(['prefix' => 'auth'], function(){
     Route::post('/register', [AuthController::class, 'register']);
@@ -26,6 +27,7 @@ Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'book'], function(){
     Route::group(['middleware' => ['role:admin']],function(){
         Route::get('/softDeleted', [BookController::class, 'getSoftDeleted']);
         Route::post('/', [BookController::class, 'store']);
+        Route::get('/{id}/attachment', [BookController::class, 'getAttachmentForBook']);
         Route::post('/{id}/attachment', [BookController::class, 'uploadAttachment']);
         Route::post('/restoreBook/{id}', [BookController::class, 'restore']);
         Route::put('/{id}', [BookController::class, 'update']);

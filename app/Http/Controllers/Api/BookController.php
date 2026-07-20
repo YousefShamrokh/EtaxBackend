@@ -73,4 +73,10 @@ class BookController extends Controller
         
         return response()->json(new AttachmentResource($attachment));
     }
+
+    public function getAttachmentForBook(int $id) : JsonResponse {
+        $book = Book::findOrFail($id);
+        $attachment = $book->attachments;
+        return response()->json(AttachmentResource::collection($attachment));
+    }
 }
